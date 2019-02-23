@@ -17,6 +17,8 @@ Script example:
  	ptr.SetString("Section", "Test", "Hello world!", "Comment example");
 
  	ptr.SaveFile("abc.txt")
+
+ 	module.INI.Delete(ptr);
  ```
 
 Functions available:
