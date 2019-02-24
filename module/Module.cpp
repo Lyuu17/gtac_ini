@@ -23,15 +23,15 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedNamespace_RegisterFunction(pNamespace, "Destroy", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedNamespace_RegisterFunction(pNamespace, "Delete", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_CheckReferenceable(pState, 0);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.Destroy: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "INI.Delete: missing pointer\n");
 		}
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.Destroy: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "INI.Delete: missing pointer\n");
 		}
 
 		delete ini;
