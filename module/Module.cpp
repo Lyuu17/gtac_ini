@@ -7,12 +7,12 @@
 
 GReflectedClass* g_pINIFileClass;
 
-extern "C" __declspec(dllexport) const char* MODULE_NAME = "INI";
+extern "C" __declspec(dllexport) const char* MODULE_NAME = "ini";
 
 extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace* pNamespace, void* pReserved) {
 	g_pINIFileClass = Galactic_ReflectedNamespace_NewClass(pNamespace, "INIFile");
 
-	Galactic_ReflectedNamespace_RegisterFunction(pNamespace, "Create", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedNamespace_RegisterFunction(pNamespace, "create", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		CSimpleIni *ini = new CSimpleIni();
 
 		GRefCounted* pRef = Galactic_Referenceable_Create(g_pINIFileClass);
@@ -23,15 +23,15 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedNamespace_RegisterFunction(pNamespace, "Delete", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedNamespace_RegisterFunction(pNamespace, "delete", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_CheckReferenceable(pState, 0);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.Delete: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.delete: missing pointer\n");
 		}
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.Delete: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.delete: missing pointer\n");
 		}
 
 		delete ini;
@@ -43,11 +43,11 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "Errno", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "errno", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		int err = 0;
 
 		if (!Galactic_NativeState_CheckInt32(pState, 0, err)) {
-			return Galactic_NativeState_SetError(pState, "INI.Errno: missing errno\n");
+			return Galactic_NativeState_SetError(pState, "ini.errno: missing errno\n");
 		}
 
 		switch (err) {
@@ -75,10 +75,10 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "Reset", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "reset", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.GetString: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.reset: missing pointer\n");
 		}
 
 		const char *szDefaultValue = Galactic_NativeState_CheckString(pState, 2);
@@ -86,7 +86,7 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.GetString: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.reset: missing pointer\n");
 		}
 
 		ini->Reset();
@@ -97,20 +97,20 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 	});
 
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "Delete", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "delete", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.Delete: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.delete: missing pointer\n");
 		}
 
 		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
 		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "INI.Delete: empty sector name\n");
+			return Galactic_NativeState_SetError(pState, "ini.delete: empty sector name\n");
 		}
 
 		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
 		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "INI.Delete: empty key name\n");
+			return Galactic_NativeState_SetError(pState, "ini.delete: empty key name\n");
 		}
 
 		bool bRemoveEmpty = true;
@@ -118,7 +118,7 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.Delete: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.delete: missing pointer\n");
 		}
 
 		bool result = ini->Delete(szSection, szKey, bRemoveEmpty);
@@ -128,15 +128,15 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "IsEmpty", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "isEmpty", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.IsEmpty: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isEmpty: missing pointer\n");
 		}
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.IsEmpty: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isEmpty: missing pointer\n");
 		}
 
 		bool result = ini->IsEmpty();
@@ -146,15 +146,15 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "IsMultiKey", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "isMultiKey", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.IsMultiKey: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isMultiKey: missing pointer\n");
 		}
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.IsMultiKey: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isMultiKey: missing pointer\n");
 		}
 
 		bool result = ini->IsMultiKey();
@@ -164,15 +164,15 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "IsMultiLine", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "isMultiLine", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.IsMultiLine: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isMultiLine: missing pointer\n");
 		}
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.IsMultiLine: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isMultiLine: missing pointer\n");
 		}
 
 		bool result = ini->IsMultiLine();
@@ -182,15 +182,15 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "IsUnicode", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "isUnicode", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.IsUnicode: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isUnicode: missing pointer\n");
 		}
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.IsUnicode: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isUnicode: missing pointer\n");
 		}
 
 		bool result = ini->IsUnicode();
@@ -200,15 +200,15 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "IsUsingSpaces", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "isUsingSpaces", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.IsUsingSpaces: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isUsingSpaces: missing pointer\n");
 		}
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.IsUsingSpaces: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.isUsingSpaces: missing pointer\n");
 		}
 
 		bool result = ini->UsingSpaces();
@@ -218,20 +218,20 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "SetUnicode", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "setUnicode", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.SetUnicode: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setUnicode: missing pointer\n");
 		}
 
 		bool bUnicode = false;
 		if (!Galactic_NativeState_CheckBoolean(pState, 0, bUnicode)) {
-			return Galactic_NativeState_SetError(pState, "INI.SetUnicode: empty boolean value\n");
+			return Galactic_NativeState_SetError(pState, "ini.setUnicode: empty boolean value\n");
 		}
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.SetUnicode: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setUnicode: missing pointer\n");
 		}
 
 		ini->SetUnicode(bUnicode);
@@ -241,15 +241,15 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "LoadFile", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "loadFile", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.LoadFile: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.loadFile: missing pointer\n");
 		}
 
 		const char *szFilename = Galactic_NativeState_CheckString(pState, 0);
 		if (!szFilename) {
-			return Galactic_NativeState_SetError(pState, "INI.LoadFile: empty filename\n");
+			return Galactic_NativeState_SetError(pState, "ini.loadFile: empty filename\n");
 		}
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
@@ -260,15 +260,15 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "SaveFile", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "saveFile", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.SaveFile: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.saveFile: missing pointer\n");
 		}
 
 		const char *szFilename = Galactic_NativeState_CheckString(pState, 0);
 		if (!szFilename) {
-			return Galactic_NativeState_SetError(pState, "INI.SaveFile: empty filename\n");
+			return Galactic_NativeState_SetError(pState, "ini.saveFile: empty filename\n");
 		}
 
 		bool bSign = false;
@@ -278,7 +278,7 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (ini->SaveFile(szFilename, true) < 0) {
-			return Galactic_NativeState_SetError(pState, "INI.SaveFile: error saving file %s\n", szFilename);
+			return Galactic_NativeState_SetError(pState, "ini.saveFile: error saving file %s\n", szFilename);
 		}
 
 		if (ini) delete ini;
@@ -290,20 +290,20 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "GetBoolValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "getBoolValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.GetBoolValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.getBoolValue: missing pointer\n");
 		}
 
 		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
 		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "INI.GetBoolValue: empty sector name\n");
+			return Galactic_NativeState_SetError(pState, "ini.getBoolValue: empty sector name\n");
 		}
 
 		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
 		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "INI.GetBoolValue: empty key name\n");
+			return Galactic_NativeState_SetError(pState, "ini.getBoolValue: empty key name\n");
 		}
 
 		bool bDefaultValue = false;
@@ -311,7 +311,7 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.GetBoolValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.getBoolValue: missing pointer\n");
 		}
 		
 		bool result = ini->GetBoolValue(szSection, szKey, bDefaultValue);
@@ -321,20 +321,20 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "GetIntValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "getIntValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.GetIntValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.getIntValue: missing pointer\n");
 		}
 
 		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
 		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "INI.GetIntValue: empty sector name\n");
+			return Galactic_NativeState_SetError(pState, "ini.getIntValue: empty sector name\n");
 		}
 
 		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
 		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "INI.GetIntValue: empty key name\n");
+			return Galactic_NativeState_SetError(pState, "ini.getIntValue: empty key name\n");
 		}
 
 		int64_t nDefaultValue = 0;
@@ -342,7 +342,7 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.GetIntValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.getIntValue: missing pointer\n");
 		}
 
 		int64_t result = ini->GetLongValue(szSection, szKey, nDefaultValue);
@@ -352,20 +352,20 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "GetFloatValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "getFloatValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.GetFloatValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.getFloatValue: missing pointer\n");
 		}
 
 		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
 		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "INI.GetFloatValue: empty sector name\n");
+			return Galactic_NativeState_SetError(pState, "ini.getFloatValue: empty sector name\n");
 		}
 
 		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
 		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "INI.GetFloatValue: empty key name\n");
+			return Galactic_NativeState_SetError(pState, "ini.getFloatValue: empty key name\n");
 		}
 
 		double nDefaultValue = 0.0;
@@ -373,7 +373,7 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.GetFloatValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.getFloatValue: missing pointer\n");
 		}
 
 		double result = ini->GetDoubleValue(szSection, szKey, nDefaultValue);
@@ -383,20 +383,20 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "GetString", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "getString", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.GetString: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.getString: missing pointer\n");
 		}
 
 		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
 		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "INI.GetString: empty sector name\n");
+			return Galactic_NativeState_SetError(pState, "ini.getString: empty sector name\n");
 		}
 
 		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
 		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "INI.GetString: empty key name\n");
+			return Galactic_NativeState_SetError(pState, "ini.getString: empty key name\n");
 		}
 
 		const char *szDefaultValue = Galactic_NativeState_CheckString(pState, 2);
@@ -404,7 +404,7 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.GetString: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.getString: missing pointer\n");
 		}
 
 		const char *result = ini->GetValue(szSection, szKey, szDefaultValue);
@@ -414,68 +414,83 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "SetBoolValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "setBoolValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.SetBoolValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setBoolValue: missing pointer\n");
 		}
 
 		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
 		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "INI.SetBoolValue: empty sector name\n");
+			return Galactic_NativeState_SetError(pState, "ini.setBoolValue: empty sector name\n");
 		}
 
 		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
 		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "INI.SetBoolValue: empty key name\n");
+			return Galactic_NativeState_SetError(pState, "ini.setBoolValue: empty key name\n");
 		}
 
 		bool bValue = false;
 		if (!Galactic_NativeState_CheckBoolean(pState, 2, bValue)) {
-			return Galactic_NativeState_SetError(pState, "INI.SetBoolValue: empty boolean value\n");
+			return Galactic_NativeState_SetError(pState, "ini.setBoolValue: empty boolean value\n");
 		}
 
-		const char *szComment = Galactic_NativeState_CheckString(pState, 3);
-		if (!szComment) szComment = 0;
+		char szComment[128];
+		bool hasComment = false;
+		if (Galactic_NativeState_CheckString(pState, 3)) {
+			strcpy_s(szComment, ";");
+			strcat(szComment, Galactic_NativeState_CheckString(pState, 3));
+
+			hasComment = true;
+		}
 
 		bool bForceReplace = false;
 		if (!Galactic_NativeState_CheckBoolean(pState, 4, bForceReplace)) bForceReplace = false;
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.SetBoolValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setBoolValue: missing pointer\n");
 		}
 
-		SI_Error result = ini->SetBoolValue(szSection, szKey, bValue, szComment, bForceReplace);
+		SI_Error result;
+		if (hasComment) result = ini->SetBoolValue(szSection, szKey, bValue, szComment, bForceReplace);
+		else result = ini->SetBoolValue(szSection, szKey, bValue, 0, bForceReplace);
+
 		if (result == SI_OK) Galactic_NativeState_ReturnBoolean(pState, true);
 		else Galactic_NativeState_ReturnBoolean(pState, false);
 
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "SetIntValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "setIntValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.SetIntValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setIntValue: missing pointer\n");
 		}
 
 		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
 		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "INI.SetIntValue: empty sector name\n");
+			return Galactic_NativeState_SetError(pState, "ini.setIntValue: empty sector name\n");
 		}
 
 		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
 		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "INI.SetIntValue: empty key name\n");
+			return Galactic_NativeState_SetError(pState, "ini.setIntValue: empty key name\n");
 		}
 
 		int64_t iValue = 0;
 		if (!Galactic_NativeState_CheckInt64(pState, 2, iValue)) {
-			return Galactic_NativeState_SetError(pState, "INI.SetIntValue: empty integer value\n");
+			return Galactic_NativeState_SetError(pState, "ini.setIntValue: empty integer value\n");
 		}
 
-		const char *szComment = Galactic_NativeState_CheckString(pState, 3);
-		if (!szComment) szComment = 0;
+		char szComment[128];
+		bool hasComment = false;
+		if (Galactic_NativeState_CheckString(pState, 3)) {
+			strcpy_s(szComment, ";");
+			strcat(szComment, Galactic_NativeState_CheckString(pState, 3));
+
+			hasComment = true;
+		}
 
 		bool bUseHex = false;
 		if (!Galactic_NativeState_CheckBoolean(pState, 4, bUseHex)) bUseHex = false;
@@ -485,88 +500,109 @@ extern "C" __declspec(dllexport) void* _cdecl RegisterModule(GReflectedNamespace
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.SetIntValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setIntValue: missing pointer\n");
 		}
 
-		SI_Error result = ini->SetLongValue(szSection, szKey, iValue, szComment, bUseHex, bForceReplace);
+		SI_Error result;
+		if (hasComment) result = ini->SetLongValue(szSection, szKey, iValue, szComment, bUseHex, bForceReplace);
+		else result = ini->SetLongValue(szSection, szKey, iValue, 0, bUseHex, bForceReplace);
+
 		if (result == SI_OK) Galactic_NativeState_ReturnBoolean(pState, true);
 		else Galactic_NativeState_ReturnBoolean(pState, false);
 
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "SetFloatValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "setFloatValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.SetFloatValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: missing pointer\n");
 		}
 
 		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
 		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "INI.SetFloatValue: empty sector name\n");
+			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: empty sector name\n");
 		}
 
 		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
 		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "INI.SetFloatValue: empty key name\n");
+			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: empty key name\n");
 		}
 
 		double nValue = 0.0;
 		if (!Galactic_NativeState_CheckDouble(pState, 2, nValue)) {
-			return Galactic_NativeState_SetError(pState, "INI.SetFloatValue: empty float value\n");
+			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: empty float value\n");
 		}
 
-		const char *szComment = Galactic_NativeState_CheckString(pState, 3);
-		if (!szComment) szComment = 0;
+		char szComment[128];
+		bool hasComment = false;
+		if (Galactic_NativeState_CheckString(pState, 3)) {
+			strcpy_s(szComment, ";");
+			strcat(szComment, Galactic_NativeState_CheckString(pState, 3));
+
+			hasComment = true;
+		}
 
 		bool bForceReplace = false;
 		if (!Galactic_NativeState_CheckBoolean(pState, 4, bForceReplace)) bForceReplace = false;
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.SetFloatValue: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: missing pointer\n");
 		}
 
-		SI_Error result = ini->SetDoubleValue(szSection, szKey, nValue, szComment, bForceReplace);
+		SI_Error result;
+		if (hasComment) result = ini->SetDoubleValue(szSection, szKey, nValue, szComment, bForceReplace);
+		else result = ini->SetDoubleValue(szSection, szKey, nValue, 0, bForceReplace);
+
 		if (result == SI_OK) Galactic_NativeState_ReturnBoolean(pState, true);
 		else Galactic_NativeState_ReturnBoolean(pState, false);
 
 		return true;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "SetString", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "setString", "", [](GNativeState* pState, int32_t argc, void* pUser) {
 		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
 		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "INI.SetString: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setString: missing pointer\n");
 		}
 
 		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
 		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "INI.SetString: empty sector name\n");
+			return Galactic_NativeState_SetError(pState, "ini.setString: empty sector name\n");
 		}
 
 		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
 		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "INI.SetString: empty key name\n");
+			return Galactic_NativeState_SetError(pState, "ini.setString: empty key name\n");
 		}
 
 		const char *szValue = Galactic_NativeState_CheckString(pState, 2);
 		if (!szValue) {
-			return Galactic_NativeState_SetError(pState, "INI.SetString: empty string value\n");
+			return Galactic_NativeState_SetError(pState, "ini.setString: empty string value\n");
 		}
 
-		const char *szComment = Galactic_NativeState_CheckString(pState, 3);
-		if (!szComment) szComment = 0;
+		char szComment[128];
+		bool hasComment = false;
+		if (Galactic_NativeState_CheckString(pState, 3)) {
+			strcpy_s(szComment, ";");
+			strcat(szComment, Galactic_NativeState_CheckString(pState, 3));
+
+			hasComment = true;
+		}
 
 		bool bForceReplace = false;
 		if (!Galactic_NativeState_CheckBoolean(pState, 4, bForceReplace)) bForceReplace = false;
 
 		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
 		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "INI.SetString: missing pointer\n");
+			return Galactic_NativeState_SetError(pState, "ini.setString: missing pointer\n");
 		}
 
-		SI_Error result = ini->SetValue(szSection, szKey, szValue, szComment, bForceReplace);
+		SI_Error result;
+		if (hasComment) result = ini->SetValue(szSection, szKey, szValue, szComment, bForceReplace);
+		else result = ini->SetValue(szSection, szKey, szValue, 0, bForceReplace);
+
 		if (result == SI_OK) Galactic_NativeState_ReturnBoolean(pState, true);
 		else Galactic_NativeState_ReturnBoolean(pState, false);
 
