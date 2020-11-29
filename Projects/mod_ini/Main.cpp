@@ -433,10 +433,7 @@ void ModuleRegister()
 		bool bValue = false;
 		State.CheckBoolean(2, bValue);
 
-		bool bForceReplace = false;
-		State.CheckBoolean(3, bForceReplace);
-
-		SI_Error result = pThis->m_pINI->SetBoolValue(szSection, szKey, bValue, 0, bForceReplace);
+		SI_Error result = pThis->m_pINI->SetBoolValue(szSection, szKey, bValue, 0, false);
 
 		if (result == SI_OK) return true;
 		else return false;
@@ -469,10 +466,7 @@ void ModuleRegister()
 		bool bUseHex = false;
 		State.CheckBoolean(3, bUseHex);
 
-		bool bForceReplace = false;
-		State.CheckBoolean(4, bForceReplace);
-
-		SI_Error result = pThis->m_pINI->SetLongValue(szSection, szKey, (long)nValue, 0, bUseHex, bForceReplace);
+		SI_Error result = pThis->m_pINI->SetLongValue(szSection, szKey, (long)nValue, 0, bUseHex, false);
 
 		if (result == SI_OK) return true;
 		else return false;
@@ -502,10 +496,7 @@ void ModuleRegister()
 		double nValue = 0.0;
 		State.CheckNumber(2, nValue);
 
-		bool bForceReplace = false;
-		State.CheckBoolean(3, bForceReplace);
-
-		SI_Error result = pThis->m_pINI->SetDoubleValue(szSection, szKey, nValue, 0, bForceReplace);
+		SI_Error result = pThis->m_pINI->SetDoubleValue(szSection, szKey, nValue, 0, false);
 
 		if (result == SI_OK) return true;
 		else return false;
@@ -537,10 +528,7 @@ void ModuleRegister()
 			return pState->SetError("ini.setString: empty string value\n");
 		}
 
-		bool bForceReplace = false;
-		State.CheckBoolean(3, bForceReplace);
-
-		SI_Error result = pThis->m_pINI->SetValue(szSection, szKey, szValue, 0, bForceReplace);
+		SI_Error result = pThis->m_pINI->SetValue(szSection, szKey, szValue, 0, false);
 
 		if (result == SI_OK) return true;
 		else return false;
