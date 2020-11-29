@@ -287,10 +287,7 @@ void ModuleRegister()
 			return pState->SetError("ini.saveFile: empty filename\n");
 		}
 
-		bool bSign = false;
-		State.CheckBoolean(1, bSign);
-
-		if (pThis->m_pINI->SaveFile(szFilename, true) < 0) {
+		if (pThis->m_pINI->SaveFile(szFilename, false) < 0) {
 			return pState->SetError("ini.saveFile: error saving file %s\n", szFilename);
 		}
 
@@ -319,7 +316,9 @@ void ModuleRegister()
 		bool bDefaultValue = false;
 		State.CheckBoolean(2, bDefaultValue);
 
-		return pThis->m_pINI->GetBoolValue(szSection, szKey, bDefaultValue);
+		pState->ReturnBoolean(pThis->m_pINI->GetBoolValue(szSection, szKey, bDefaultValue));
+
+		return true;
 
 		SDK_ENDTRY;
 	});
@@ -434,9 +433,7 @@ void ModuleRegister()
 		State.CheckBoolean(2, bValue);
 
 		SI_Error result = pThis->m_pINI->SetBoolValue(szSection, szKey, bValue, 0, false);
-
-		if (result == SI_OK) return true;
-		else return false;
+		State.Return(SDK::NumberValue(result));
 
 		return true;
 
@@ -467,9 +464,7 @@ void ModuleRegister()
 		State.CheckBoolean(3, bUseHex);
 
 		SI_Error result = pThis->m_pINI->SetLongValue(szSection, szKey, (long)nValue, 0, bUseHex, false);
-
-		if (result == SI_OK) return true;
-		else return false;
+		State.Return(SDK::NumberValue(result));
 
 		return true;
 
@@ -497,9 +492,7 @@ void ModuleRegister()
 		State.CheckNumber(2, nValue);
 
 		SI_Error result = pThis->m_pINI->SetDoubleValue(szSection, szKey, nValue, 0, false);
-
-		if (result == SI_OK) return true;
-		else return false;
+		State.Return(SDK::NumberValue(result));
 
 		return true;
 
@@ -529,9 +522,7 @@ void ModuleRegister()
 		}
 
 		SI_Error result = pThis->m_pINI->SetValue(szSection, szKey, szValue, 0, false);
-
-		if (result == SI_OK) return true;
-		else return false;
+		State.Return(SDK::NumberValue(result));
 
 		return true;
 
